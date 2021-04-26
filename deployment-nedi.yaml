@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-nedi
+  labels:
+    app: nedi
+spec:
+  selector:
+    matchLabels:
+      app: nedi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nedi
+  spec:
+    containers:
+    - name: nedi
+      image: klinnex/nedi
+      env:
+      - name: MYSQL_ENV_MYSQL_ROOT_PASSWORD
+        value: admin
+      ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-nedi
+  labels:
+    app: nedi
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: nedi

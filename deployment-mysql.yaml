@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-mysql
+  labels:
+    app: nedi
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nedi
+  spec:
+    containers:
+    - name: mysql
+      image: mysql:5.6
+      env:
+      - name: MYSQL_ROOT_PASSWORD
+        value: admin
+      ports:
+        - containerPort: 3306
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-mysql
+  labels:
+    app: nedi
+spec:
+  type: ClusterIp
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
